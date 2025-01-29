@@ -1,0 +1,54 @@
+import Foundation
+
+final class HubViewModel: ObservableObject {
+    @Published var species: [Species] = []
+
+    let service: HubService
+    var count = 0
+    var currentIndex = 0
+    let offset = 20 // hard-coded offset
+
+    init(service: HubService) {
+        self.service = service
+    }
+
+    @MainActor
+    func fetchPokemon() async {
+        do {
+            if currentIndex != 0, currentIndex * offset >= count { return }
+            let response = try await service.getPokemons(page: currentIndex)
+            count = response.count
+            species.append(contentsOf: response.results)
+            currentIndex += 1
+        } catch {
+            print(error)
+        }
+    }
+
+    @MainActor
+    func fetchDetails(for species: Species) async {
+        do {
+            let response = try await service.getPokemonsDetails(for: species.url.absoluteString)
+            print(response)
+        } catch {
+            print(error)
+        }
+    }
+
+    @MainActor
+    func fetchImage(for species: Species) async -> Data? {
+        guard let id = species.specieIdentifier
+        else {
+            return nil
+        }
+
+        do {
+            let response = try await service.getImage(for: id)
+            return response
+        } catch {
+            print(error)
+            print("Error to download image")
+            return nil
+        }
+    }
+}
