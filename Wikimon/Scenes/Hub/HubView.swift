@@ -1,13 +1,6 @@
-//
-//  ContentView.swift
-//  Wikimon
-//
-//  Created by Igor Custodio on 28/01/25.
-//
-
 import SwiftUI
 
-struct ContentView: View {
+struct HubView: View {
     var body: some View {
         VStack {
             Image(systemName: "globe")
@@ -20,5 +13,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    HubView()
 }
