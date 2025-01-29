@@ -4,18 +4,24 @@ struct HubView: View {
     @ObservedObject var viewModel: HubViewModel = HubViewModel(service: HubService())
 
     var body: some View {
-        VStack {
-            List {
-                ForEach(viewModel.species) { species in
-                    PokemonCard(
-                        species: species,
-                        setImage: {
-                            guard let data = await viewModel.fetchImage(for: species)
-                            else { return nil }
+        NavigationView {
+            VStack {
+                List {
+                    ForEach(viewModel.species) { species in
+                        PokemonCard(
+                            species: species,
+                            setImage: {
+                                guard let data = await viewModel.fetchImage(for: species)
+                                else { return nil }
 
-                            return UIImage(data: data)
+                                return UIImage(data: data)
+                            }
+                        )
+                        .onTapGesture {
+                            Task {
+                                await viewModel.fetchDetails(for: species)
+                            }
                         }
-                    )
                         .onAppear {
                             Task {
                                 if viewModel.species.last?.id == species.id {
@@ -23,17 +29,14 @@ struct HubView: View {
                                 }
                             }
                         }
-                        .onTapGesture {
-                            Task {
-                                await viewModel.fetchDetails(for: species)
-                            }
-                        }
+                    }
                 }
+                .listStyle(PlainListStyle())
             }
-        }
-        .padding()
-        .task {
-            await viewModel.fetchPokemon()
+            .navigationTitle("Pokémon Hub")
+            .task {
+                await viewModel.fetchPokemon()
+            }
         }
     }
 }
