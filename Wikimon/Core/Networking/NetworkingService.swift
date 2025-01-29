@@ -3,41 +3,53 @@ import Foundation
 typealias NetworkingService = Networking.NetworkingService
 
 extension Networking {
-    final class NetworkingService {
+    class NetworkingService<R: Route> {
         let urlSession: URLSession
+        let baseUrl: String
 
-        init(urlSession: URLSession = .shared) {
+        init(urlSession: URLSession = .shared, baseUrl: String) {
             self.urlSession = urlSession
+            self.baseUrl = baseUrl
         }
 
-        func request<T: Resource>(_ route: Route) async throws -> T {
-            let requestBuilder = RequestBuilder(route: route)
+        func request<T: Resource>(_ route: R) async throws -> T {
+            let data: Data? = try await request(route)
+
+            guard let data else {
+                throw ResponseError.unexpected
+            }
+
+            do {
+                return try T.decode(from: data)
+            } catch let error as DecodingError {
+                throw ResponseError.decodingFailed(underlyingError: error)
+            } catch {
+                throw ResponseError.unexpected
+            }
+        }
+
+        func request(_ route: R) async throws -> Data? {
+            let requestBuilder = RequestBuilder(baseUrl: route.usesAbsoluteURL ? "" : baseUrl, route: route)
 
             let request = try requestBuilder.buildRequest()
 
-            do {
-                let (data, response) = try await urlSession.data(for: request)
+            let (data, response) = try await urlSession.data(for: request)
 
-                guard let response = response as? HTTPURLResponse else {
-                    throw ResponseError.noResponse
-                }
-
-                print(String(data: data, encoding: .utf8))
-
-                switch response.statusCode {
-                case 200..<300:
-                    return try T.decode(from: data)
-                case 400..<500:
-                    throw ResponseError.clientError(response.statusCode)
-                case 500..<600:
-                    throw ResponseError.serverError(response.statusCode)
-                default:
-                    throw ResponseError.unexpected
-                }
-            } catch {
-                throw ResponseError.unkonwn
+            guard let response = response as? HTTPURLResponse else {
+                throw ResponseError.noResponse
             }
+
+            switch response.statusCode {
+            case 200..<300:
+                return data
+            case 400..<500:
+                throw ResponseError.clientError(code: response.statusCode)
+            case 500..<600:
+                throw ResponseError.serverError(code: response.statusCode)
+            default:
+                throw ResponseError.unexpected
+            }
+
         }
     }
-
 }

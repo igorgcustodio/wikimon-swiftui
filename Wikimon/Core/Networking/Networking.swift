@@ -13,15 +13,33 @@ enum Networking {
         var queryItems: [URLQueryItem] { get }
         var timeout: TimeInterval { get }
         var cachePolicy: URLRequest.CachePolicy { get }
+        var usesAbsoluteURL: Bool { get }
     }
 
     enum ResponseError: Error {
         case noResponse
         case unexpected
-        case decodingFailed
-        case clientError(Int)
-        case serverError(Int)
-        case unkonwn
+        case decodingFailed(underlyingError: Error)
+        case clientError(code: Int)
+        case serverError(code: Int)
+        case unkonwn(description: String)
+
+        var localizedDescription: String {
+            switch self {
+            case let .clientError(code):
+                return "Client error (\(code))"
+            case let .serverError(code):
+                return "Server error (\(code))"
+            case let .unkonwn(description):
+                return description
+            case .noResponse:
+                return "Failed to convert the URLResponse"
+            case .unexpected:
+                return "Unexpected error"
+            case .decodingFailed:
+                return "Failed to decode"
+            }
+        }
     }
 
     protocol Resource: Decodable {
@@ -29,6 +47,8 @@ enum Networking {
     }
 
     struct RequestBuilder {
+        let baseUrl: String
+
         enum RequestError: Error {
             case badUrl
             case encodingFailed
@@ -38,7 +58,7 @@ enum Networking {
         let route: Route
 
         func buildRequest() throws -> URLRequest {
-            guard var url = URL(string: route.path)
+            guard var url = URL(string: baseUrl + route.path)
             else {
                 throw RequestError.badUrl
             }
