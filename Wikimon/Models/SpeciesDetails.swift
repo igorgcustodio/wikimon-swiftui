@@ -1,7 +1,7 @@
 import Foundation
 
 /// Species object returned as part of the `getSpeciesDetails` endpoint
-struct SpeciesDetails: Networking.Resource {
+struct SpeciesDetails: Networking.Resource, Hashable {
     let baseHappiness: Int?
     let captureRate: Int?
     let color: Color?
@@ -31,43 +31,43 @@ struct SpeciesDetails: Networking.Resource {
 }
 
 /// EvolutionChain model returned as part of the SpeciesDetails from the `getSpecies` endpoint
-struct EvolutionChain: Decodable {
+struct EvolutionChain: Decodable, Hashable {
     let url: URL
 }
 
-struct Color: Decodable {
+struct Color: Decodable, Hashable {
     let name: String?
     let url: String?
 }
 
-struct FlavorTextEntry: Decodable {
+struct FlavorTextEntry: Decodable, Hashable {
     let flavorText: String?
     let language: Color?
     let version: Color?
 }
 
-struct Genus: Decodable {
+struct Genus: Decodable, Hashable {
     let genus: String?
     let language: Color?
 }
 
-struct Name: Decodable {
+struct Name: Decodable, Hashable {
     let language: Color?
     let name: String?
 }
 
-struct PalParkEncounter: Decodable {
+struct PalParkEncounter: Decodable, Hashable {
     let area: Color?
     let baseScore: Int?
     let rate: Int?
 }
 
-struct PokedexNumber: Decodable {
+struct PokedexNumber: Decodable, Hashable {
     let entryNumber: Int?
     let pokedex: Color?
 }
 
-struct Variety: Decodable {
+struct Variety: Decodable, Hashable {
     let isDefault: Bool?
     let pokemon: Color?
 }
