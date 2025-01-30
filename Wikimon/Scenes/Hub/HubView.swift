@@ -9,13 +9,7 @@ struct HubView: View {
                 List {
                     ForEach(viewModel.species) { species in
                         PokemonCard(
-                            species: species,
-                            setImage: {
-                                guard let data = await viewModel.fetchImage(for: species)
-                                else { return nil }
-
-                                return UIImage(data: data)
-                            }
+                            species: species
                         )
                         .onTapGesture {
                             Task {
@@ -38,7 +32,7 @@ struct HubView: View {
                 await viewModel.fetchPokemon()
             }
             .navigationDestination(item: $viewModel.speciesDetails) { species in
-                SpeciesDetailsView()
+                SpeciesDetailsView(viewModel: SpeciesDetailsViewModel(speciesDetails: species))
             }
         }
     }

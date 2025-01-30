@@ -34,21 +34,4 @@ final class HubViewModel: ObservableObject {
             print(error)
         }
     }
-
-    @MainActor
-    func fetchImage(for species: Species) async -> Data? {
-        guard let id = species.specieIdentifier
-        else {
-            return nil
-        }
-
-        do {
-            let response = try await service.getImage(for: id)
-            return response
-        } catch {
-            print(error)
-            print("Error to download image")
-            return nil
-        }
-    }
 }

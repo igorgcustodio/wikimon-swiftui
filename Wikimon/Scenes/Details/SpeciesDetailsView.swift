@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct SpeciesDetailsView: View {
-    @ObservedObject var viewModel: SpeciesDetailsViewModel = SpeciesDetailsViewModel()
+    @ObservedObject var viewModel: SpeciesDetailsViewModel
     
     var body: some View {
         VStack {
@@ -10,14 +10,15 @@ struct SpeciesDetailsView: View {
                     .fill(.mint)
                     .frame(height: 300)
 
-                Image("bulbasaur")
-                    .resizable()
-                    .frame(width: 200, height: 200, alignment: .center)
+                LoadableImageView(
+                    imageURL: viewModel.speciesDetails.imageUrl,
+                    imageSize: 200
+                )
 
                 VStack {
                     Spacer()
 
-                    Text("Bulbasaur")
+                    Text(viewModel.speciesDetails.name?.capitalized ?? "Invalid name")
                         .font(.title)
                         .fontWeight(.bold)
                         .padding()
@@ -36,9 +37,7 @@ struct SpeciesDetailsView: View {
                 Rectangle()
                     .fill(.shade1)
 
-                PokemonCard(species: MockSpecies.mock) {
-                    UIImage(named: "bulbasaur")
-                }
+                PokemonCard(species: MockSpecies.mock)
             }
             .frame(height: 100)
 
@@ -46,9 +45,14 @@ struct SpeciesDetailsView: View {
         }
         .background(.shade0)
         .ignoresSafeArea()
+        .task {
+            await viewModel.fetchEvolutionChain()
+        }
     }
 }
 
 #Preview {
-    SpeciesDetailsView()
+    SpeciesDetailsView(
+        viewModel: SpeciesDetailsViewModel(speciesDetails: MockSpeciesDetails.speciesDetails)
+    )
 }

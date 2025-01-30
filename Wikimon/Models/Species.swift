@@ -20,6 +20,12 @@ struct Species: Decodable, Identifiable {
     var specieIdentifier: Int? {
         Int(url.lastPathComponent)
     }
+
+    var imageUrl: String? {
+        guard let specieIdentifier
+        else { return nil }
+        return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/\(specieIdentifier).png"
+    }
 }
 
 #if DEBUG

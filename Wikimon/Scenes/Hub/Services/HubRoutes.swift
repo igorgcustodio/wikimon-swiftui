@@ -2,7 +2,6 @@ import Foundation
 
 enum HubRoutes {
     case hub(page: Int)
-    case image(id: Int)
     case generic(url: String)
 }
 
@@ -11,8 +10,6 @@ extension HubRoutes: Networking.Route {
         return switch self {
         case .hub:
             "pokemon-species"
-        case let .image(id):
-            "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/\(id).png"
         case let .generic(url):
             url
         }
@@ -34,7 +31,7 @@ extension HubRoutes: Networking.Route {
         return switch self {
         case .hub:
             false
-        case .image, .generic:
+        case .generic:
             true
         }
     }

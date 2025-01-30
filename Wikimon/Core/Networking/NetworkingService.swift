@@ -7,7 +7,7 @@ extension Networking {
         let urlSession: URLSession
         let baseUrl: String
 
-        init(urlSession: URLSession = .shared, baseUrl: String) {
+        init(urlSession: URLSession = .shared, baseUrl: String = KeyConfig.baseURL) {
             self.urlSession = urlSession
             self.baseUrl = baseUrl
         }
