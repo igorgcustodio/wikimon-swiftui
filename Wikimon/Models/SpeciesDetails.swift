@@ -32,7 +32,7 @@ struct SpeciesDetails: Networking.Resource, Hashable {
 
 /// EvolutionChain model returned as part of the SpeciesDetails from the `getSpecies` endpoint
 struct EvolutionChain: Decodable, Hashable {
-    let url: URL
+    let url: URL?
 }
 
 struct Color: Decodable, Hashable {
