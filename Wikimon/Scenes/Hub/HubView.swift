@@ -31,8 +31,8 @@ struct HubView: View {
                         }
                     }
                 }
-                .listStyle(PlainListStyle())
             }
+            .background(.shade0)
             .navigationTitle("Pokémon Hub")
             .task {
                 await viewModel.fetchPokemon()
