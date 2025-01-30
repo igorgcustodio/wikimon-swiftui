@@ -35,23 +35,9 @@ struct LoadableImageView: View {
     }
 }
 
-struct LoadableImageRoute: Networking.Route {
-    var path: String
-
-    var method: Networking.Method { .GET }
-    var body: (any Encodable)? { nil }
-    var headers: [String : String] { [:] }
-    var queryItems: [URLQueryItem] { [] }
-    var usesAbsoluteURL: Bool { true }
-
-    init(path: String) {
-        self.path = path
-    }
-}
-
-final class LoadableImageService: NetworkingService<LoadableImageRoute> {
+final class LoadableImageService: NetworkingService<GetUrlRoute> {
 
     func fetchImage(url: String) async -> Data? {
-        return try? await request(LoadableImageRoute(path: url))
+        return try? await request(GetUrlRoute(path: url))
     }
 }
