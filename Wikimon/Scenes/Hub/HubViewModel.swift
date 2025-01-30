@@ -2,11 +2,12 @@ import Foundation
 
 final class HubViewModel: ObservableObject {
     @Published var species: [Species] = []
+    @Published var speciesDetails: SpeciesDetails?
 
-    let service: HubService
-    var count = 0
-    var currentIndex = 0
-    let offset = 20 // hard-coded offset
+    private let service: HubService
+    private var count = 0
+    private var currentIndex = 0
+    private let offset = 20 // hard-coded offset
 
     init(service: HubService) {
         self.service = service
@@ -28,8 +29,7 @@ final class HubViewModel: ObservableObject {
     @MainActor
     func fetchDetails(for species: Species) async {
         do {
-            let response = try await service.getPokemonsDetails(for: species.url.absoluteString)
-            print(response)
+            speciesDetails = try await service.getPokemonsDetails(for: species.url.absoluteString)
         } catch {
             print(error)
         }

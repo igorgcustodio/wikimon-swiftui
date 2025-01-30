@@ -4,7 +4,7 @@ struct HubView: View {
     @ObservedObject var viewModel: HubViewModel = HubViewModel(service: HubService())
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 List {
                     ForEach(viewModel.species) { species in
@@ -36,6 +36,9 @@ struct HubView: View {
             .navigationTitle("Pokémon Hub")
             .task {
                 await viewModel.fetchPokemon()
+            }
+            .navigationDestination(item: $viewModel.speciesDetails) { species in
+                SpeciesDetailsView()
             }
         }
     }
