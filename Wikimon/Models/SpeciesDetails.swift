@@ -7,6 +7,13 @@ struct SpeciesDetails: Networking.Resource, Hashable {
     let isBaby: Bool?
     let name: String?
 
+    enum CodingKeys: String, CodingKey {
+        case evolutionChain = "evolution_chain"
+        case id
+        case isBaby = "is_baby"
+        case name
+    }
+
     var imageUrl: String? {
         guard let id
         else { return nil }
@@ -16,14 +23,14 @@ struct SpeciesDetails: Networking.Resource, Hashable {
 
 /// EvolutionChain model returned as part of the SpeciesDetails from the `getSpecies` endpoint
 struct EvolutionChain: Decodable, Hashable {
-    let url: URL?
+    let url: String?
 }
 
 #if DEBUG
 enum MockSpeciesDetails {
     static var speciesDetails: SpeciesDetails {
         SpeciesDetails(
-            evolutionChain: EvolutionChain(url: URL(string: "https://pokeapi.co/api/v2/evolution-chain/1")!),
+            evolutionChain: EvolutionChain(url: "https://pokeapi.co/api/v2/evolution-chain/1"),
             id: 2,
             isBaby: true,
             name: "Bulbasaur"

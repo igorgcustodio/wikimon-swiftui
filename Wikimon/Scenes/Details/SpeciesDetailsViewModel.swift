@@ -1,10 +1,10 @@
-import Foundation
+import SwiftUI
 
 final class SpeciesDetailsViewModel: ObservableObject {
-    @Published var speciesDetails: SpeciesDetails
+    @Published var evolutionSpecies: [Species] = []
 
+    let speciesDetails: SpeciesDetails
     private let service: SpeciesDetailsService
-    private var evolutionChain: EvolutionChainDetails?
 
     init(
         speciesDetails: SpeciesDetails,
@@ -16,15 +16,14 @@ final class SpeciesDetailsViewModel: ObservableObject {
 
     @MainActor
     func fetchEvolutionChain() async {
-        print(speciesDetails.evolutionChain)
-        guard let evolutionChainUrl = speciesDetails.evolutionChain?.url?.absoluteString else {
-            print("No evolution chain")
+        guard let evolutionChainUrl = speciesDetails.evolutionChain?.url else {
+            print("No evolution chain available")
             return
         }
 
         do {
-            evolutionChain = try await service.getEvolutionChain(on: evolutionChainUrl)
-            print(evolutionChain)
+            let evolution = try await service.getEvolutionChain(on: evolutionChainUrl)
+            evolutionSpecies = evolution.chain.allSpecies()
         } catch {
             print(error)
         }

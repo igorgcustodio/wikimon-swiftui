@@ -37,7 +37,18 @@ struct SpeciesDetailsView: View {
                 Rectangle()
                     .fill(.shade1)
 
-                PokemonCard(species: MockSpecies.mock)
+                if !viewModel.evolutionSpecies.isEmpty {
+                    List {
+                        ForEach(viewModel.evolutionSpecies) { species in
+                            PokemonCard(species: species)
+                        }
+                    }
+                } else {
+                    Text("No Evolution Chain available")
+                        .font(.body)
+                        .padding()
+                        .foregroundStyle(.black)
+                }
             }
             .frame(height: 100)
 
@@ -45,8 +56,10 @@ struct SpeciesDetailsView: View {
         }
         .background(.shade0)
         .ignoresSafeArea()
-        .task {
-            await viewModel.fetchEvolutionChain()
+        .onAppear {
+            Task {
+                await viewModel.fetchEvolutionChain()
+            }
         }
     }
 }
