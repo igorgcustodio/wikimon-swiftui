@@ -28,8 +28,10 @@ struct HubView: View {
             }
             .background(.shade0)
             .navigationTitle("Pokémon Hub")
-            .task {
-                await viewModel.fetchPokemon()
+            .onAppear {
+                Task {
+                    await viewModel.fetchPokemon()
+                }
             }
             .navigationDestination(item: $viewModel.speciesDetails) { species in
                 SpeciesDetailsView(viewModel: SpeciesDetailsViewModel(speciesDetails: species))
