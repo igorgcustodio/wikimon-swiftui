@@ -4,10 +4,10 @@ typealias NetworkingService = Networking.NetworkingService
 
 extension Networking {
     class NetworkingService<R: Route> {
-        let urlSession: URLSession
+        let urlSession: URLSessionProtocol
         let baseUrl: String
 
-        init(urlSession: URLSession = .shared, baseUrl: String = KeyConfig.baseURL) {
+        init(urlSession: URLSessionProtocol = URLSession.shared, baseUrl: String = KeyConfig.baseURL) {
             self.urlSession = urlSession
             self.baseUrl = baseUrl
         }
