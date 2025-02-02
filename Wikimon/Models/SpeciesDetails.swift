@@ -1,7 +1,7 @@
 import Foundation
 
 /// Species object returned as part of the `getSpeciesDetails` endpoint
-struct SpeciesDetails: Networking.Resource, Hashable {
+struct SpeciesDetails: Networking.Resource, Hashable, Identifiable {
     let evolutionChain: EvolutionChain?
     let id: Int?
     let isBaby: Bool?

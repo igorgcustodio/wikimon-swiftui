@@ -2,6 +2,7 @@ import SwiftUI
 
 final class SpeciesDetailsViewModel: ObservableObject {
     @Published var evolutionSpecies: [Species] = []
+    @Published var loadableState: LoadableContentViewState = .loading
 
     let speciesDetails: SpeciesDetails
     private let service: SpeciesDetailsService
@@ -17,15 +18,16 @@ final class SpeciesDetailsViewModel: ObservableObject {
     @MainActor
     func fetchEvolutionChain() async {
         guard let evolutionChainUrl = speciesDetails.evolutionChain?.url else {
-            print("No evolution chain available")
+            loadableState = .failed("No evolution chain available for this species")
             return
         }
 
         do {
             let evolution = try await service.getEvolutionChain(on: evolutionChainUrl)
             evolutionSpecies = evolution.chain.allSpecies()
+            loadableState = .loaded
         } catch {
-            print(error)
+            loadableState = .failed("Failed to fetch evolution chain")
         }
     }
 }

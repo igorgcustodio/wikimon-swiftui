@@ -3,6 +3,7 @@ import Foundation
 final class HubViewModel: ObservableObject {
     @Published var species: [Species] = []
     @Published var speciesDetails: SpeciesDetails?
+    @Published var loadableState: LoadableContentViewState = .loading
 
     private let service: HubService
     private var count = 0
@@ -21,17 +22,20 @@ final class HubViewModel: ObservableObject {
             count = response.count
             species.append(contentsOf: response.results)
             currentIndex += 1
+            loadableState = .loaded
         } catch {
-            print(error)
+            loadableState = .failed("Failed to fetch Pokemon list")
         }
     }
 
     @MainActor
     func fetchDetails(for species: Species) async {
         do {
+            loadableState = .loading
             speciesDetails = try await service.getPokemonsDetails(for: species.url.absoluteString)
+            loadableState = .loaded
         } catch {
-            print(error)
+            loadableState = .loaded // We still want to see the Pokemon list
         }
     }
 }
