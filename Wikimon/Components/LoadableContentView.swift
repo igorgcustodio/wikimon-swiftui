@@ -3,20 +3,20 @@ import SwiftUI
 enum LoadableContentViewState {
     case loading
     case loaded
-    case failed
+    case failed(String)
 }
 
 struct LoadableContentView<Loading: View, Loaded: View, Failed: View>: View {
     @Binding var state: LoadableContentViewState
     var loading: () -> Loading
     var loaded: () -> Loaded
-    var failed: () -> Failed
+    var failed: (String) -> Failed
 
     public init(
         state: Binding<LoadableContentViewState>,
         @ViewBuilder loading: @escaping () -> Loading,
         @ViewBuilder loaded: @escaping () -> Loaded,
-        @ViewBuilder failed: @escaping () -> Failed
+        @ViewBuilder failed: @escaping (String) -> Failed
     ) {
         _state = state
         self.loading = loading
@@ -28,7 +28,7 @@ struct LoadableContentView<Loading: View, Loaded: View, Failed: View>: View {
         switch state {
         case .loading: loading()
         case .loaded: loaded()
-        case .failed: failed()
+        case let .failed(error): failed(error)
         }
     }
 }
