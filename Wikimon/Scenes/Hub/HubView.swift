@@ -6,24 +6,33 @@ struct HubView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                List {
-                    ForEach(viewModel.species) { species in
-                        PokemonCard(
-                            species: species
-                        )
-                        .onTapGesture {
-                            Task {
-                                await viewModel.fetchDetails(for: species)
+                LoadableContentView(
+                    state: $viewModel.loadableState) {
+                        Text("Loading Pokémon list")
+                    }
+                loaded: {
+                    List {
+                        ForEach(viewModel.species) { species in
+                            PokemonCard(
+                                species: species
+                            )
+                            .onTapGesture {
+                                Task {
+                                    await viewModel.fetchDetails(for: species)
+                                }
                             }
-                        }
-                        .onAppear {
-                            Task {
-                                if viewModel.species.last?.id == species.id {
-                                    await viewModel.fetchPokemon()
+                            .onAppear {
+                                Task {
+                                    if viewModel.species.last?.id == species.id {
+                                        await viewModel.fetchPokemon()
+                                    }
                                 }
                             }
                         }
                     }
+                }
+                failed: { error in
+                    Text(error)
                 }
             }
             .background(.shade0)
