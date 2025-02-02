@@ -38,15 +38,28 @@ struct SpeciesDetailsView: View {
                     .fill(.shade1)
                     .frame(height: 100)
 
-                if !$viewModel.evolutionSpecies.isEmpty {
-                    List {
-                        ForEach(viewModel.evolutionSpecies, id: \.id) { species in
-                            PokemonCard(species: species)
-                        }
-                        .frame(height: 40)
+                LoadableContentView(
+                    state: $viewModel.loadableState) {
+                        Text("Loading evolution chain")
                     }
-                } else {
-                    Text("No Evolution Chain available")
+                loaded: {
+                    if !$viewModel.evolutionSpecies.isEmpty {
+                        List {
+                            ForEach(viewModel.evolutionSpecies, id: \.id) { species in
+                                PokemonCard(species: species)
+                            }
+                            .frame(height: 40)
+                        }
+                    } else {
+                        Text("No Evolution Chain available")
+                            .font(.body)
+                            .padding()
+                            .foregroundStyle(.black)
+                            .frame(height: 100)
+                    }
+                }
+                failed: { error in
+                    Text(error)
                         .font(.body)
                         .padding()
                         .foregroundStyle(.black)

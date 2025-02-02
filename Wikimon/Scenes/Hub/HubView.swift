@@ -33,7 +33,7 @@ struct HubView: View {
                     await viewModel.fetchPokemon()
                 }
             }
-            .navigationDestination(item: $viewModel.speciesDetails) { species in
+            .sheet(item: $viewModel.speciesDetails) { species in
                 SpeciesDetailsView(viewModel: SpeciesDetailsViewModel(speciesDetails: species))
             }
         }
