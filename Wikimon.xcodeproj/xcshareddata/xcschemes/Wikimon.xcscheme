@@ -30,7 +30,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:Wikimon.xctestplan"
+            reference = "container:WikimonTests/Wikimon.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>

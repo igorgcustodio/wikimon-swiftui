@@ -1,6 +1,7 @@
 import Testing
 @testable import Wikimon
 
+@Suite
 struct HubServiceTest {
     private let service: HubService
     private let mockSession: MockURLSession
@@ -15,7 +16,8 @@ struct HubServiceTest {
         {
             "results": [
                 { "name": "bulbasaur", "url": "https://pokeapi.co/api/v2/pokemon-species/1/" }
-            ]
+            ],
+            "count": 1
         }
         """.data(using: .utf8)!
 

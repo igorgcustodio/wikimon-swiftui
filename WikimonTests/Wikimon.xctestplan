@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "77482C0D-5987-4899-A405-DBACC851FE63",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Wikimon.xcodeproj",
+        "identifier" : "252D705C2D497FFA00459E97",
+        "name" : "WikimonTests"
+      }
+    }
+  ],
+  "version" : 1
+}

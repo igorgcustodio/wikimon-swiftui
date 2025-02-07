@@ -1,7 +1,7 @@
 import Foundation
 
 /// EvolutionChain model returned from the `getEvolutionChain` endpoint
-struct EvolutionChainDetails: Decodable, Networking.Resource {
+struct EvolutionChainDetails: Networking.Resource {
     let chain: ChainLink
 }
 
